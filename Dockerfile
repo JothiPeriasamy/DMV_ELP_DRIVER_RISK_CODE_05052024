@@ -15,4 +15,6 @@ RUN pip install -r requirements.txt
 
 
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-CMD streamlit run --server.port 8080 --server.maxUploadSize 1024 --server.maxMessageSize 100 --server.enableCORS false DSAI_app.py
+CMD streamlit run --server.port 8080 --server.maxMessageSize 100 --server.enableCORS false DSAI_app.py
+
+# CMD streamlit run --server.port 8080 --server.maxUploadSize 1024 --server.maxMessageSize 100 --server.enableCORS false DSAI_app.py

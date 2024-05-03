@@ -51,7 +51,6 @@ import matplotlib.pyplot as plt
 from sklearn.feature_selection import RFE
 from sklearn.impute import SimpleImputer
 
-from DSAI_GENAI.DSAI_Azure_Assistant import DataInsightsWithAssistant
 import os
 
 AZURE_ASSISTANT_ID = os.environ["AZURE_ASSISTANT_ID"]
@@ -113,41 +112,6 @@ def DriverRiskClassification():
         
                 
         if vAR_st.session_state["training_data"] is not None:
-            
-            #Explore with GENAI
-            
-            col1,col2,col3,col4,col5 = vAR_st.columns([1,9,1,9,2])
-            with col2:
-                vAR_st.write('')
-                vAR_st.write('')
-                vAR_st.subheader('Analyze Data With GEN-AI')
-
-
-            with col4:
-                vAR_st.write('')
-                vAR_st.write('')
-                vAR_gen_data = vAR_st.radio("Response time depends on the request file size",["No","Yes"],horizontal=False)
-
-
-
-            if vAR_gen_data=="Yes":
-                
-                col1,col2,col3,col4,col5 = vAR_st.columns([1,9,1,9,2])
-                
-                with col4:
-                    
-                    vAR_user_input = vAR_st.text_area('Sample : Which court number has investigated more number of crashes?')
-
-                    vAR_submit = vAR_st.button("Submit")
-                col1,col2,col3 = vAR_st.columns([1.5,10,1.5])
-
-                if vAR_submit:   
-                    if vAR_user_input:
-                        vAR_llm_response = DataInsightsWithAssistant(vAR_user_input,AZURE_ASSISTANT_ID)
-
-                        with col2:
-                            vAR_st.info(vAR_llm_response) 
-                
                 
 
             Preview_Data(vAR_st.session_state["training_data"],"train_preview")
@@ -397,8 +361,10 @@ def Preview_Data(vAR_df,mode):
         
 
     with col4:
-        vAR_st.write('')
-        vAR_st.write('')
+        if mode!="llm_preview":
+
+            vAR_st.write('')
+            vAR_st.write('')
         vAR_preview_data = vAR_st.button("Preview Data",key=mode)
         
     
@@ -491,16 +457,19 @@ def Feature_Selection(vAR_df):
     
     estimator = LogisticRegression(max_iter=10000)
     
+    # Scale the input data
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
     
     if 'All' in vAR_features:
         print('vAR_features in All scenario - ',vAR_df_columns)
         selector = RFE(estimator, n_features_to_select=len(vAR_df_columns))
-        selector = selector.fit(X, y)
+        selector = selector.fit(X_scaled, y)
         return selector,vAR_df_columns
     
     else:
         selector = RFE(estimator, n_features_to_select=len(vAR_features))
-        selector = selector.fit(X, y)
+        selector = selector.fit(X_scaled, y)
     
     
     

@@ -26,6 +26,7 @@ vAR_st.set_page_config(page_title="DMV Recommendation", layout="wide")
 from DSAI_Utility.DSAI_Utility import All_Initialization,CSS_Property
 
 from DSAI_Classification_Model.DSAI_Driver_Risk_Classification import DriverRiskClassification
+from DSAI_GENAI.DSAI_GENAI_Analysis import GENAI_Analysis
 from DSAI_Bigquery_Impl.DSAI_GCP_Operations import InsertErrorLog
 
 import os
@@ -50,15 +51,21 @@ if __name__=='__main__':
         with col2:
             vAR_st.write('')
             vAR_st.write('')
-            vAR_st.subheader('Select the Model')
+            vAR_st.subheader('Select Application')
             
         with col4:
             vAR_st.write('')
-            vAR_option = vAR_st.selectbox(' ',('Select a Model',"Driver Risk - Crash Level Classification"))
+            vAR_option = vAR_st.selectbox(' ',('Select App',"Driver Risk - Crash Level Classification","LLM Insights & Analysis"))
             
+        
+
+
             
         if vAR_option=="Driver Risk - Crash Level Classification":
             DriverRiskClassification()
+
+        if vAR_option=="LLM Insights & Analysis":
+            GENAI_Analysis()
         
 
     except BaseException as exception:
